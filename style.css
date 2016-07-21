@@ -1,0 +1,25 @@
+div {
+	position: absolute;
+	left:50%;
+}
+.player {
+	height: 1.5%;
+	width: 10%;
+	transform: translate(-50%, 0);
+}
+#player1 {
+	background-color: blue;
+	top: 95%;
+}
+#player2 {
+	background-color: green;
+	top: 5%;
+}
+#ball {
+	width: 25px;
+	height: 25px;
+	border-radius: 100%;
+	background-color: black;
+	top: 95%;
+	transform: translate(-50%, -100%);
+}
