@@ -2,6 +2,23 @@ div {
 	position: absolute;
 	left:50%;
 }
+#info {
+	text-align: center;
+	top: 25%;
+	transform: translate(-50%, -50%);
+}
+.score {
+	font-size: 2em;
+	text-align: center;
+	top: 50%;
+	transform: translate(0, -50%);
+}
+#score1 {
+	left: 2.5%;
+}
+#score2 {
+	left: 97.5%
+}
 .player {
 	height: 1.5%;
 	width: 10%;
@@ -9,7 +26,7 @@ div {
 }
 #player1 {
 	background-color: blue;
-	top: 95%;
+	top: 93.5%;
 }
 #player2 {
 	background-color: green;
@@ -22,4 +39,12 @@ div {
 	background-color: black;
 	top: 95%;
 	transform: translate(-50%, -100%);
+}
+@keyframes fadeOut {
+	from {opacity: 1;}
+	to {opacity: 0;}
+}
+@keyframes fadeIn {
+	from {opacity: 0;}
+	to {opacity: 1;}
 }
