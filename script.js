@@ -25,9 +25,9 @@ window.onload = function() {
 		clearTimeout(player.animate);
 		if (parseFloat(player.left) > 5) {
 			player.left = parseFloat(player.left) - 0.5 + '%';
-		}
-		if (player.holdBall) {
-			ball.left = parseFloat(ball.left) - 0.5 + '%';
+			if (player.holdBall) {
+				ball.left = parseFloat(ball.left) - 0.5 + '%';
+			}
 		}
 		player.animate = setTimeout(function() {moveLeft(player);}, 25)
 	}
@@ -35,33 +35,84 @@ window.onload = function() {
 		clearTimeout(player.animate);
 		if (parseFloat(player.left) < 95) {
 			player.left = parseFloat(player.left) + 0.5 + '%';
-		}
-		if (player.holdBall) {
-			ball.left = parseFloat(ball.left) + 0.5 + '%';
+			if (player.holdBall) {
+				ball.left = parseFloat(ball.left) + 0.5 + '%';
+			}
 		}
 		player.animate = setTimeout(function() {moveRight(player);}, 25)
 	}
-
+	function addAbilityToLaunch() {
+		document.body.onkeydown = function(event) {
+			switch (event.code) {
+				case 'ArrowLeft':
+					moveLeft(player1);
+					break;
+				case 'ArrowRight':
+					moveRight(player1);
+					break;
+				case 'KeyA':
+					moveLeft(player2);
+					break;
+				case 'KeyD':
+					moveRight(player2);
+					break;
+				case 'Space':
+					launchBall();
+			}
+		}
+	}
+	function removeAbilityToLaunch() {
+		document.body.onkeydown = function(event) {
+			switch (event.code) {
+				case 'ArrowLeft':
+					moveLeft(player1);
+					break;
+				case 'ArrowRight':
+					moveRight(player1);
+					break;
+				case 'KeyA':
+					moveLeft(player2);
+					break;
+				case 'KeyD':
+					moveRight(player2);
+					break;
+			}
+		}
+	}
 	function moveBall() {
 		clearTimeout(ball.animate);
 		let ballTop = parseFloat(ball.top);
 		let ballLeft = parseFloat(ball.left);
+		//if ball hits top
 		if (ballTop/100*window.innerHeight <= 25) {
 			clearTimeout(ball.animate);
 			player1.score++;
 			updateScores();
 			player2.holdBall = true;
-			ball.top = parseFloat(player2.top) + 1.5 + (25/window.innerHeight*100) + "";
+			addAbilityToLaunch();
+			
+			ball.top = parseFloat(player2.top) + 1.5 + (25/window.innerHeight*100) + "%";
+			ball.left = player2.left;
+			return 0;
+		//If ball hits bottom
+		} else if (ballTop >= 100) {
+			clearTimeout(ball.animate);
+			player2.score++;
+			updateScores();
+			player1.holdBall = true;
+			addAbilityToLaunch();
+			
+			ball.top = parseFloat(player1.top) + "%";
 			ball.left = player1.left;
 			return 0;
 		}
 		if (
 			//if ball hits player 1
-			(ballTop == parseFloat(player1.top) 
+			(ballTop >= parseFloat(player1.top) && ball.velocityY > 0
 				&& ballLeft <= parseFloat(player1.left) + 5
 				&& ballLeft >= parseFloat(player1.left) - 5) ||
 			//if ball hits player 2
-			(ballTop <= parseFloat(player2.top) + 1.5 + (25/window.innerHeight*100)
+			(ballTop <= parseFloat(player2.top) + 1.5 + (25/window.innerHeight*100) && ball.velocityY < 0
 				&& ballLeft <= parseFloat(player2.left) + 5
 				&& ballLeft >= parseFloat(player2.left) - 5)
 			) {
@@ -76,8 +127,11 @@ window.onload = function() {
 	}
 	
 	function launchBall() {
+		removeAbilityToLaunch();
 		ball.velocityX = 0.5;
-		ball.velocityY = -0.5;
+		ball.velocityY = player1.holdBall ? -0.5 : 0.5;
+		player1.holdBall = false;
+		player2.holdBall = false;
 		ball.top = parseFloat(ball.top) + ball.velocityY + '%';
 		ball.left = parseFloat(ball.left) + ball.velocityX + '%';
 		ball.animate = setTimeout(moveBall, 25);
@@ -94,31 +148,10 @@ window.onload = function() {
 			player1.animation = "fadeIn 2s forwards";
 			player2.animation = "fadeIn 2s forwards";
 			ball.animation = "fadeIn 2s forwards";
-			document.getElementsByClassName("score")[0].style.animation = "fadeIn 2s forwards";
-			document.getElementsByClassName("score")[1].style.animation = "fadeIn 2s forwards";
-			this.onkeydown = function(event) {
-				
-				switch (event.code) {
-					case 'ArrowLeft':
-						moveLeft(player1);
-						break;
-					case 'ArrowRight':
-						moveRight(player1);
-						break;
-					case 'KeyA':
-						moveLeft(player2);
-						break;
-					case 'KeyD':
-						moveRight(player2);
-						break;
-					case 'Space':
-						player1.holdBall = false;
-						player2.holdBall = false;
-						launchBall();
-				}
-				
-			}
+			document.getElementById("score1").style.animation = "fadeIn 2s forwards";
+			document.getElementById("score2").style.animation = "fadeIn 2s forwards";
 			
+			addAbilityToLaunch();
 		}
 	}
 	
